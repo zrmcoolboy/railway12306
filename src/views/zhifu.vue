@@ -43,7 +43,7 @@ const type = localStorage.getItem("troggle");
 // const goodsid = []
 const zhifu2 = async () => {
   let res = await paysend2(data.out_trade_no, data.trade_no);
-  console.log(res);
+  // console.log(res);
   msg.value = res.msg;
   state.value = res.type;
   if (res.code === 200 && type === "cart") {
@@ -53,7 +53,7 @@ const zhifu2 = async () => {
       return item.goodsid;
     });
     const res = await delCartGoods(userid, goodsid);
-    console.log(res);
+    // console.log(res);
   }
 };
 zhifu2();

@@ -23,7 +23,7 @@
             </span>
             <div class="label-next">
               <input
-                v-model="info.start"
+                v-model.lazy="info.start"
                 type="text"
                 class="city-go"
                 placeholder="北京"
@@ -42,7 +42,7 @@
             </span>
             <div class="label-next">
               <input
-                v-model="info.end"
+                v-model.lazy="info.end"
                 type="text"
                 class="city-go"
                 placeholder="上海"
@@ -949,19 +949,19 @@
           到达站
         </th>
         <th>
-          <div class="goTime" @click="changeArrowStart">
+          <div class="goTime" @click="changeArrowStart" data-name="startTime">
             出发时间<el-icon v-show="isIcon"><ArrowUp /></el-icon
             ><el-icon v-show="!isIcon"><ArrowDown /></el-icon>
           </div>
           <br clear="none" />
-          <div @click="changeArrowEnd" class="goTime2">
-            到达时间<el-icon v-show="isIcon2"><ArrowDown /></el-icon
-            ><el-icon v-show="!isIcon2"><ArrowUp /></el-icon>
+          <div @click="changeArrowEnd" class="goTime2" data-name="endTime">
+            到达时间<el-icon v-show="!isIcon2"><ArrowDown /></el-icon
+            ><el-icon v-show="isIcon2"><ArrowUp /></el-icon>
           </div>
         </th>
-        <th @click="changeArrowTime" class="passTime">
-          历时<el-icon v-show="isIcon3"><ArrowDownBold /></el-icon
-          ><el-icon v-show="!isIcon3"><ArrowUpBold /></el-icon>
+        <th @click="changeArrowTime" class="passTime" data-name="totalTime">
+          历时<el-icon v-show="!isIcon3"><ArrowDownBold /></el-icon
+          ><el-icon v-show="isIcon3"><ArrowUpBold /></el-icon>
         </th>
         <th>
           商务座
@@ -1041,12 +1041,12 @@ import Header from "@/components/HeaderView.vue";
 import Footer from "@/components/FooterView.vue";
 import { useMainStore } from "@/store";
 import { reactive, ref, onMounted, computed, onUpdated } from "vue";
-import { findTicket, FindTypeTrain } from "@/api/request.js";
+import { findTicket, FindTypeTrain, sortDesc } from "@/api/request.js";
 import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
 import router from "@/router";
 const store = useMainStore();
-const { ticketData, start, end } = storeToRefs(store);
+const { ticketData } = storeToRefs(store);
 console.log(ticketData.value);
 let temp = ref("");
 // 地点交换
@@ -1137,6 +1137,10 @@ const ByStartOrEnd = (name, e) => {
     }
   }
 };
+// 历时降序
+// const get1 = () => {
+//   console.log("降序");
+// };
 
 // 获取ulDom
 const lis = ref(null);
@@ -1159,6 +1163,7 @@ const getAllStart = () => {
 const gostation = ref([]);
 // 找出到达站
 const onstation = ref([]);
+
 // 获取全部车次信息
 const getTicketInfo = async () => {
   const res = await findTicket(info);
@@ -1181,7 +1186,6 @@ const getTicketInfo = async () => {
 
 // 首页搜索进入
 onMounted(() => {
-  (info.start = start), (info.end = end);
   if (info.start === "" && info.end === "") {
     store.$patch({
       ticketData: "",
@@ -1214,14 +1218,33 @@ const isIcon = ref(true);
 const isIcon2 = ref(true);
 const isIcon3 = ref(true);
 // 箭头点击事件
-const changeArrowStart = () => {
+const changeArrowStart = async (e) => {
   isIcon.value = !isIcon.value;
+  console.log(e.target.dataset.name);
+  let res = await sortDesc(info.start, info.end, e.target.dataset.name);
+  console.log(res);
+  store.$patch({
+    ticketData: res.data,
+  });
 };
-const changeArrowEnd = () => {
+const changeArrowEnd = async (e) => {
   isIcon2.value = !isIcon2.value;
+  console.log(e.target.dataset.name);
+  let res = await sortDesc(info.start, info.end, e.target.dataset.name);
+  console.log(res);
+  store.$patch({
+    ticketData: res.data,
+  });
 };
-const changeArrowTime = () => {
+const changeArrowTime = async (e) => {
   isIcon3.value = !isIcon3.value;
+  console.log(e.target.dataset.name);
+  let res = await sortDesc(info.start, info.end, e.target.dataset.name);
+  console.log(res);
+  store.$patch({
+    ticketData: res.data,
+  });
+  // console.log(e.target.dataset.name);
 };
 </script>
 

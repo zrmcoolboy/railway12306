@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
@@ -134,11 +135,35 @@ const router = createRouter({
   },
 });
 
-// router.beforeEach(to,from,next) {
-//   if(to.path == '/shopdetail') {
-//     if(token) {
-//       next()
-//     }
-//   }
-// }
+router.beforeEach(function (to, from, next) {
+  const token = localStorage.getItem("token");
+  if (to.path == "/shopdetail") {
+    if (token) {
+      next();
+    } else {
+      ElMessageBox.alert("<strong>请先登录</strong>", "温馨提示", {
+        confirmButtonText: "确定",
+        dangerouslyUseHTMLString: true,
+        center: true,
+      }).then(() => {
+        next("login");
+      });
+    }
+  } else if (to.path == "/buyticket") {
+    if (token) {
+      next();
+    } else {
+      ElMessageBox.alert("<strong>请先登录</strong>", "温馨提示", {
+        confirmButtonText: "确定",
+        dangerouslyUseHTMLString: true,
+        center: true,
+      }).then(() => {
+        next("login");
+      });
+    }
+  } else {
+    next();
+  }
+});
+
 export default router;

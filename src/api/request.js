@@ -1,3 +1,4 @@
+import { start } from "nprogress";
 import request from "./index";
 // 旅游
 export const getTravel = () => {
@@ -32,6 +33,14 @@ export const getPersonInfo = (userid) => {
 // 车票查询
 export const findTicket = (info) => {
   return request.post("/train", info);
+};
+
+// 降序
+export const sortDesc = (start, end, type) => {
+  return request({
+    url: "/ticketsort",
+    params: { start: start, end: end, type: type },
+  });
 };
 
 // 按车辆类型查询
