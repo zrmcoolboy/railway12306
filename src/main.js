@@ -4,6 +4,7 @@ import piniaPlugin from "pinia-plugin-persist";
 import App from "./App.vue";
 import router from "@/router";
 import "@/assets/css/reset.css";
+import "element-plus/theme-chalk/el-message.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";

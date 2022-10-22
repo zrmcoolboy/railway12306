@@ -1,7 +1,7 @@
 <template>
   <!-- <h1>服务区域</h1> -->
   <div class="wrapper">
-    <ul @click="goDetailInfo">
+    <ul>
       <li @click="goAppointment">
         <div class="box">
           <img src="@/assets/img/001-2.png" style="width: 36px; height: 36px" />
@@ -98,12 +98,9 @@
 
 <script setup>
 import router from "@/router";
-const goDetailInfo = (e) => {
-  // console.log(e.target);
-};
 // 预约
 const goAppointment = () => {
-  router.push("/serverinfo");
+  router.push("/serverinfo/appointment");
 };
 // 遗失
 const goLost = () => {
@@ -145,6 +142,7 @@ const goUser = () => {
   text-align: center;
   background-position: right center;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 .wrapper > ul > li > a > img {
   float: left;

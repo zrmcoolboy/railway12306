@@ -178,7 +178,9 @@
           </el-tab-pane>
         </el-tabs>
       </el-tab-pane>
-      <el-tab-pane label="评价" name="pingjia">评价</el-tab-pane>
+      <el-tab-pane label="评价" name="pingjia">
+        <Comments />
+      </el-tab-pane>
       <el-tab-pane label="商家" name="shop">商家</el-tab-pane>
     </el-tabs>
   </div>
@@ -197,6 +199,7 @@ import { ref } from "vue";
 import { getTypeFood, addCart, getCartGoods } from "@/api/request";
 import { ElMessage } from "element-plus";
 import router from "@/router";
+import Comments from "@/views/VipView/goodInforate.vue";
 const num = ref(0);
 const token = localStorage.getItem("token");
 if (!token) {

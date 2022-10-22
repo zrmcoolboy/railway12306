@@ -108,7 +108,7 @@ const onLogin = async () => {
     username: info.username,
     password: info.password,
   });
-  console.log(res);
+  console.log(res.data);
   if (res.status === 200) {
     ElMessage({
       message: "登录成功！",
@@ -117,14 +117,14 @@ const onLogin = async () => {
     const token = res.token;
     const userid = res.data[0].id;
     const username = res.data[0].username;
-    console.log(userid);
+    // console.log(userid);
     localStorage.setItem("token", token);
     localStorage.setItem("userid", userid);
     localStorage.setItem("username", username);
-    // store.$patch({
-    //   username: info.username,
-    // });
-    router.push("/home");
+    store.$patch({
+      personInfo: res.data,
+    });
+    router.push("/serverinfo");
   } else {
     ElMessage({
       message: res.message,

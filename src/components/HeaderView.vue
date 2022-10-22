@@ -21,7 +21,7 @@
           <li>
             <a href="javascipt:;">爱心模式</a>
           </li>
-          <li>
+          <li class="English">
             <el-dropdown>
               <span class="el-dropdown-link">
                 <a href="javascipt:;">English</a>
@@ -29,7 +29,7 @@
                   <arrow-down />
                 </el-icon>
               </span>
-              <template javascipt:;dropdown>
+              <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item>English</el-dropdown-item>
                   <el-dropdown-item>中文</el-dropdown-item>
@@ -38,14 +38,42 @@
             </el-dropdown>
           </li>
           <li>
-            <a href="javascipt:;">我的12306</a>
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                <a href="javascipt:;">我的12306</a>
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="router.push('/serverinfo/carorder')"
+                    >火车票订单</el-dropdown-item
+                  >
+                  <el-dropdown-item>候补车票</el-dropdown-item>
+                  <el-dropdown-item>计次•定期票订单</el-dropdown-item>
+                  <el-dropdown-item>约号订单</el-dropdown-item>
+                  <el-dropdown-item>本人车票</el-dropdown-item>
+                  <el-dropdown-item divided>我的餐饮•特产</el-dropdown-item>
+                  <el-dropdown-item>我的保险</el-dropdown-item>
+                  <el-dropdown-item>我的会员</el-dropdown-item>
+                  <el-dropdown-item divided>查看个人信息</el-dropdown-item>
+                  <el-dropdown-item>账户安全</el-dropdown-item>
+                  <el-dropdown-item divided>乘车人</el-dropdown-item>
+                  <el-dropdown-item>地址管理</el-dropdown-item>
+                  <el-dropdown-item divided>温馨服务查询</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </li>
           <li>
             <router-link to="/login" class="login" v-show="!username2"
               >登录</router-link
             >
-            <router-link to="/info" class="login" v-show="username2"
-              >您好，{{ username2 }}</router-link
+            <router-link to="/serverinfo" class="login" v-show="username2"
+              >您好，<span class="login-name" style="color: #3b99fc">{{
+                username2
+              }}</span></router-link
             >
           </li>
           <li>
@@ -137,7 +165,7 @@
         <div class="menu-one">
           <ul class="one-one">
             <li>
-              <a href="javascipt:;">会员管理</a>
+              <router-link to="/vipinfo">会员管理</router-link>
             </li>
             <li>
               <a href="javascipt:;">积分账户</a>
@@ -294,7 +322,7 @@
                 <a href="javascipt:;">代售点</a>
               </li>
               <li>
-                <a href="javascipt:;">客服电话</a>
+                <router-link to="/tel">客服电话</router-link>
               </li>
               <li>
                 <a href="javascipt:;">列车状态</a>
@@ -320,7 +348,6 @@ const username2 = localStorage.getItem("username");
 // const store = useMainStore();
 // const { username } = storeToRefs(store);
 const outLogin = () => {
-  // alert("123");
   ElMessage({
     message: "退出成功！",
     type: "success",
@@ -335,7 +362,7 @@ const outLogin = () => {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .body {
   /* position: absolute; */
   width: 100%;
@@ -365,6 +392,11 @@ const outLogin = () => {
   position: absolute;
   top: 20px;
   right: 0px;
+  ul {
+    .English {
+      margin-right: -25px;
+    }
+  }
 }
 .top-bar-right .right-search {
   display: flex;
@@ -423,7 +455,10 @@ const outLogin = () => {
 }
 /* 英文 */
 .el-dropdown {
-  width: 60px;
+  width: 80px;
+}
+:deep(.el-dropdown-item) {
+  font-size: 12px;
 }
 .el-dropdown-link {
   display: flex;
@@ -451,8 +486,8 @@ const outLogin = () => {
 .outLogin:hover {
   color: #3b99fc;
 }
-.bar-top ul > li > .login:hover {
-  color: #3b99fc;
+.bar-top ul > li > .login:hover .login-name {
+  text-decoration: underline;
 }
 /* 导航栏 */
 .body-top {

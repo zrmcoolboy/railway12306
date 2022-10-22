@@ -72,7 +72,7 @@ const routes = [
     component: () => import("@/views/Serverinfo/ServerInfo.vue"),
     children: [
       {
-        path: "",
+        path: "/serverinfo/appointment",
         name: "预约服务",
         component: () =>
           import("@/views/Serverinfo/children/AppointmentView.vue"),
@@ -86,6 +86,84 @@ const routes = [
         path: "/serverinfo/userback",
         name: "用户反馈",
         component: () => import("@/views/Serverinfo/children/feedback.vue"),
+      },
+      {
+        path: "",
+        name: "个人中心",
+        component: () => import("@/views/Serverinfo/children/PersonInfo.vue"),
+      },
+      {
+        path: "/serverinfo/carorder",
+        name: "火车票订单",
+        component: () =>
+          import("@/views/Serverinfo/children/order/CarOrder.vue"),
+      },
+      {
+        path: "/serverinfo/dalay",
+        name: "候补订单",
+        component: () =>
+          import("@/views/Serverinfo/children/order/DalayOrder.vue"),
+      },
+      {
+        path: "/serverinfo/ontime",
+        name: "定期票订单",
+        component: () => import("@/views/Serverinfo/children/order/OnTime.vue"),
+      },
+      {
+        path: "/serverinfo/preorder",
+        name: "约号订单",
+        component: () =>
+          import("@/views/Serverinfo/children/order/PreOrder.vue"),
+      },
+      {
+        path: "/serverinfo/userinfo",
+        name: "个人信息",
+        component: () =>
+          import("@/views/Serverinfo/children/userinfo/UserInfo.vue"),
+      },
+      {
+        path: "/serverinfo/accountsafe",
+        name: "账户安全",
+        component: () =>
+          import("@/views/Serverinfo/children/userinfo/AccountSafe.vue"),
+      },
+      {
+        path: "/serverinfo/editpwd",
+        name: "修改密码",
+        component: () =>
+          import("@/views/Serverinfo/children/userinfo/children/EditPwd.vue"),
+      },
+      {
+        path: "/serverinfo/address",
+        name: "乘车人",
+        component: () =>
+          import("@/views/Serverinfo/children/address/AddressHome.vue"),
+        children: [
+          {
+            path: "",
+            name: "乘车人",
+            component: () =>
+              import(
+                "@/views/Serverinfo/children/address/children/Passenger.vue"
+              ),
+          },
+          {
+            path: "/serverinfo/address/addinfo",
+            name: "增加信息",
+            component: () =>
+              import(
+                "@/views/Serverinfo/children/address/children/AddInfo.vue"
+              ),
+          },
+          {
+            path: "/serverinfo/address/editinfo",
+            name: "修改信息",
+            component: () =>
+              import(
+                "@/views/Serverinfo/children/address/children/EditInfo.vue"
+              ),
+          },
+        ],
       },
     ],
   },
@@ -123,6 +201,16 @@ const routes = [
     path: "/buyticket",
     name: "buyticket",
     component: () => import("@/views/BuyTicket/BuyTicket.vue"),
+  },
+  {
+    path: "/vipinfo",
+    name: "vipinfo",
+    component: () => import("@/views/VipView/memberserve/MemberServe.vue"),
+  },
+  {
+    path: "/tel",
+    name: "tel",
+    component: () => import("@/views/Tel.vue"),
   },
 ];
 

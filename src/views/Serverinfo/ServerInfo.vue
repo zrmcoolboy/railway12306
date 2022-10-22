@@ -3,115 +3,130 @@
   <div class="center-box">
     <!-- 面包屑 -->
     <div class="breadcrumb">
-      <a href="#">个人中心</a>
-      <span>></span>
-      <a href="#">温馨服务</a>
-      <span>></span>
-      <span class="active">重点旅客预约服务说明</span>
+      <a href="javascript:;">个人中心</a>
+      <span v-show="name">></span>
+      <a href="javascript:;" class="active1">{{ name }}</a>
     </div>
     <!-- 个人中心左侧 -->
-    <ul>
+    <ul @click="getItem">
       <li class="menu-item">
         <h2 class="menu-tit">
-          <a class="#">个人中心</a>
+          <router-link to="/serverinfo">个人中心</router-link>
         </h2>
       </li>
-      <li class="menu-item">
+      <li class="menu-item" @click="getItem">
         <h2 class="menu-tit">
-          <a class="#">订单中心</a>
+          <a>订单中心</a>
         </h2>
         <ul class="menu-sub">
-          <li>
-            <a href="#">火车票订单</a>
+          <li class="active">
+            <router-link to="/serverinfo/carorder" name="火车票订单"
+              >火车票订单</router-link
+            >
           </li>
-          <li>
-            <a href="#">候补订单</a>
+          <li class="active">
+            <router-link to="/serverinfo/dalay" name="候补订单"
+              >候补订单</router-link
+            >
           </li>
-          <li>
-            <a href="#">计次-定期票订单</a>
+          <li class="active">
+            <router-link to="/serverinfo/ontime" name="计次-定期票订单"
+              >计次-定期票订单</router-link
+            >
           </li>
-          <li>
-            <a href="#">约号订单</a>
+          <li class="active">
+            <router-link to="/serverinfo/preorder" name="约号订单"
+              >约号订单</router-link
+            >
           </li>
-          <li>
-            <a href="#">雪具快运订单</a>
+          <li class="active">
+            <a href="javascript:;" name="雪具快运订单">雪具快运订单</a>
           </li>
-          <li>
-            <a href="#">餐饮-特产</a>
+          <li class="active">
+            <a href="javascript:;" name="餐饮-特产">餐饮-特产</a>
           </li>
-          <li>
-            <a href="#">保险订单</a>
+          <li class="active">
+            <a href="javascript:;" name="保险订单">保险订单</a>
           </li>
         </ul>
       </li>
       <li class="menu-item">
         <h2 class="menu-tit">
-          <a class="#">本人车票</a>
+          <a class="javascript:;">本人车票</a>
         </h2>
       </li>
       <li class="menu-item" id="gerenzhongxin">
         <h2 class="menu-tit">
-          <a class="#">会员中心</a>
+          <a class="javascript:;">会员中心</a>
         </h2>
       </li>
-      <li class="menu-item" id="gerenzhongxin">
+      <li class="menu-item" id="gerenzhongxin" @click="getItem">
         <h2 class="menu-tit">
-          <a class="#">个人信息</a>
+          <a class="javascript:;">个人信息</a>
         </h2>
         <ul class="menu-sub">
-          <li>
-            <a href="#">查看个人信息</a>
+          <li class="active">
+            <router-link to="/serverinfo/userinfo" name="查看个人信息"
+              >查看个人信息</router-link
+            >
           </li>
-          <li>
-            <a href="#">账号安全</a>
+          <li class="active">
+            <router-link to="/serverinfo/accountsafe" name="账号安全"
+              >账号安全</router-link
+            >
           </li>
-          <li>
-            <a href="#">手机核验</a>
+          <li class="active">
+            <a href="javascript:;" name="手机核验">手机核验</a>
           </li>
-          <li>
-            <a href="#">账号注销</a>
+          <li class="active">
+            <a href="javascript:;" name="账号注销">账号注销</a>
           </li>
         </ul>
       </li>
-      <li class="menu-item" id="gerenzhongxin">
+
+      <li class="menu-item" id="gerenzhongxin" @click="getItem">
         <h2 class="menu-tit">
-          <a class="#">常用信息管理</a>
+          <a class="javascript:;">常用信息管理</a>
         </h2>
         <ul class="menu-sub">
-          <li>
-            <a href="#">乘车人</a>
+          <li class="active" @click="getAllInfo">
+            <router-link to="/serverinfo/address" name="乘车人"
+              >乘车人</router-link
+            >
           </li>
-          <li>
-            <a href="#">地址管理</a>
+          <li class="active">
+            <a href="javascript:;" name="地址管理">地址管理</a>
           </li>
         </ul>
       </li>
-      <li class="menu-item" id="gerenzhongxin">
+      <li class="menu-item" id="gerenzhongxin" @click="getItem">
         <h2 class="menu-tit">
-          <a class="#">温馨服务</a>
+          <a class="javascript:;">温馨服务</a>
         </h2>
         <ul class="menu-sub">
-          <li class="tive">
-            <a href="#" class="appiontment">重点旅客预约</a>
+          <li class="active">
+            <a href="javascript:;" class="appiontment" name="重点旅客预约"
+              >重点旅客预约</a
+            >
           </li>
-          <li>
-            <a href="#">遗失物品查找</a>
+          <li class="active">
+            <a href="javascript:;" name="遗失物品查找">遗失物品查找</a>
           </li>
-          <li>
-            <a href="#">服务查询</a>
+          <li class="active">
+            <a href="javascript:;" ame="服务查询">服务查询</a>
           </li>
         </ul>
       </li>
-      <li class="menu-item" id="gerenzhongxin">
+      <li class="menu-item" id="gerenzhongxin" @click="getItem">
         <h2 class="menu-tit">
-          <a class="#">投诉和建议</a>
+          <a class="javascript:;">投诉和建议</a>
         </h2>
         <ul class="menu-sub">
-          <li>
-            <a href="#">投诉</a>
+          <li class="active">
+            <a href="javascript:;" name="投诉">投诉</a>
           </li>
-          <li>
-            <a href="#">建议</a>
+          <li class="active">
+            <a href="javascript:;" name="建议">建议</a>
           </li>
         </ul>
       </li>
@@ -125,9 +140,40 @@
 <script setup>
 import Header from "@/components/HeaderView.vue";
 import Footer from "@/components/FooterView.vue";
+import { getAllPersonInfo } from "@/api/request";
+import { useMainStore } from "@/store";
+import { storeToRefs } from "pinia";
+const store = useMainStore();
+import { ref } from "vue";
+const name = ref("");
+const getItem = (e) => {
+  // console.log(e.target.name);
+  name.value = e.target.name;
+};
+const userid = localStorage.getItem("userid");
+// 获取账户下所有关联的人
+const getAllInfo = async () => {
+  const res = await getAllPersonInfo(userid);
+  console.log(res);
+  if (res.status === 200) {
+    store.$patch({
+      AllPersonInfo: res.data,
+    });
+  }
+};
 </script>
 
 <style lang='less' scoped>
+.menu-item {
+  text-align: center;
+}
+.active:hover {
+  background-color: #0077ff;
+  cursor: pointer;
+  a {
+    color: #fff !important;
+  }
+}
 /* 面包屑 */
 .breadcrumb {
   height: 50px;
@@ -146,7 +192,7 @@ import Footer from "@/components/FooterView.vue";
   margin: 0 3px;
 }
 
-.breadcrumb .active {
+.breadcrumb .active1 {
   color: #3b99fc;
 }
 
@@ -164,6 +210,7 @@ import Footer from "@/components/FooterView.vue";
   height: 890px;
   padding-inline-start: 10px;
   margin-left: 150px;
+  margin-top: 18px;
 }
 
 .center-box > ul > li {
@@ -186,15 +233,6 @@ import Footer from "@/components/FooterView.vue";
   font-size: 14px;
 }
 
-.center-box > ul > li .menu-sub {
-  margin-block-start: 0px;
-  margin-block-end: 0px;
-  display: block;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  padding-inline-start: 20px;
-}
-
 .center-box > ul > li .menu-sub > li {
   width: 130px;
   height: 30px;
@@ -203,12 +241,11 @@ import Footer from "@/components/FooterView.vue";
 }
 
 .center-box > ul > li .menu-sub > li > a {
-  height: 30px;
-  line-height: 0px;
-  padding: 0px 0px;
+  width: 100%;
+  height: 100%;
+  line-height: 28px;
+  display: block;
   color: #666;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: 14px;
 }
 

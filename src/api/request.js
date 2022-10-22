@@ -29,6 +29,39 @@ export const getPersonInfo = (userid) => {
     params: { userid: userid },
   });
 };
+// 获取相关联的人
+export const getAllPersonInfo = (userid) => {
+  return request({
+    url: "/user/contact",
+    params: { userid: userid },
+  });
+};
+// 添加乘客
+export const SavePassenger = (data) => {
+  return request({
+    url: "/user/passenger",
+    method: "post",
+    data: data,
+  });
+};
+
+// 删除乘客人
+export const delPassenger = (data) => {
+  return request.post("/user/delpassenger", data);
+};
+// 更新乘客人
+export const updatePassenger = (data) => {
+  return request.post("/user/updatepassenger", data);
+};
+
+//修改个人信息
+export const editPersonInfo = (info) => {
+  return request.post("/user/editinfo", info);
+};
+// 修改密码
+export const editPassword = (data) => {
+  return request.post("/user/editpwd", data);
+};
 
 // 车票查询
 export const findTicket = (info) => {
