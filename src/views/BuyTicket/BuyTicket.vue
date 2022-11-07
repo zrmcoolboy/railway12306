@@ -17,16 +17,23 @@
           </div>
           <div class="ticektType">
             <div class="item">
-              <p>商务座(<span class="money">￥1873.0</span>)</p>
-              <p class="moveLeft">{{ orderinfo.tedeng }}张票</p>
+              <p>
+                商务座(<span class="money">￥{{ orderinfo.vipSite }}.0</span>)
+              </p>
+              <p class="moveLeft">{{ orderinfo.tedeng }}票</p>
             </div>
             <div class="item">
-              <p>一等座(<span class="money">￥1873.0</span>)</p>
-              <p class="moveLeft">{{ orderinfo.one }}张票</p>
+              <p>
+                一等座(<span class="money">￥{{ orderinfo.oneSite }}.0</span>)
+              </p>
+              <p class="moveLeft">{{ orderinfo.one }}票</p>
             </div>
             <div class="item">
-              <p>二等座(<span class="money">￥1873.0</span>)</p>
-              <p class="moveLeft">{{ orderinfo.two }}张票</p>
+              <p>
+                二等座(<span class="money">￥{{ orderinfo.secondSite }}.0</span
+                >)
+              </p>
+              <p class="moveLeft">{{ orderinfo.two }}票</p>
             </div>
           </div>
           <p class="carinfotip">
@@ -40,9 +47,22 @@
               <el-icon size="25px" color="#07f"><User /></el-icon>
               <span>乘车人</span>
             </p>
-            <div class="every" v-show="username">
-              <input type="checkbox" id="1" :checked="username" />
-              <label for="1">{{ username }}</label>
+            <div class="passenger">
+              <div
+                class="every"
+                v-show="username"
+                v-for="(item, index) in users"
+                :key="index"
+              >
+                <input
+                  type="checkbox"
+                  :id="item.tel"
+                  :checked="item.isState"
+                  @click="addPassanger(item, $event)"
+                  :data-index="index"
+                />
+                <label :for="item.tel">{{ item.username }}</label>
+              </div>
             </div>
           </div>
           <el-table :data="tableData" border style="width: 100%">
@@ -54,14 +74,7 @@
               type="index"
               :index="1"
             />
-            <el-table-column align="center" prop="ticked" label="票种">
-              <template #default="scope">
-                <el-select v-model="ticket" placeholder="请选择">
-                  <el-option value="成人票"></el-option>
-                  <el-option value="学生票"></el-option>
-                </el-select>
-              </template>
-            </el-table-column>
+            <el-table-column align="center" prop="travel" label="票种" />
             <el-table-column
               align="center"
               prop="siteNum"
@@ -91,12 +104,13 @@
             <el-table-column align="center" prop="tel" label="手机号码" />
             <el-table-column align="center" prop="positionNum" label="操作">
               <template #default="scope">
-                <el-icon size="25px" @click="delRow"
+                <el-icon size="25px" @click="delRow(scope.row, scope.$index)"
                   ><CircleCloseFilled
                 /></el-icon>
               </template>
             </el-table-column>
           </el-table>
+
           <img src="@/assets/img/ticketad7.png" style="width: 1106px" />
         </el-card>
       </div>
@@ -150,53 +164,218 @@
       <p>9.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
     </el-card>
   </div>
+  <el-dialog
+    v-model="dialogTableVisible"
+    title="请核对以下信息"
+    :show-close="false"
+    class="checkorder"
+  >
+    <el-card>
+      <div class="trainInfo">
+        <span class="time">2022-10-17(周一)</span>
+        <span class="moveLeft">{{ orderinfo.carID }}次</span>
+        <span class="startStation">{{ orderinfo.start }}站</span>
+        <span class="moveLeft">({{ orderinfo.startTime }}开)</span>
+        <span class="symbol">————</span>
+        <span class="time">{{ orderinfo.end }}站</span>
+        <span class="moveLeft">({{ orderinfo.endTime }}到)</span>
+      </div>
+      <el-table :data="tableData" border style="width: 100%">
+        <el-table-column
+          align="center"
+          prop="date"
+          label="序号"
+          width="50"
+          type="index"
+          :index="1"
+        />
+        <el-table-column align="center" prop="travel" label="票种" />
+        <el-table-column align="center" prop="site" label="席别" />
+        <el-table-column align="center" prop="username" label="姓名" />
+        <el-table-column
+          align="center"
+          prop="idcard"
+          width="110"
+          label="证件类型"
+        />
+        <el-table-column
+          align="center"
+          prop="idcardnum"
+          width="140"
+          label="证件号码"
+        />
+        <el-table-column
+          align="center"
+          prop="tel"
+          width="140"
+          label="手机号码"
+        />
+      </el-table>
+      <p class="tip">
+        *如果本次列车剩余席位无法满足您的选座需求，系统将自动为您分配席位。
+      </p>
+      <div class="checkSite">
+        <div class="left">
+          <div class="left-xz">选座喽！</div>
+          已选座
+          <span class="selectNo">{{ numSite }}/{{ tableData.length }}</span>
+        </div>
+        <div class="allRight">
+          <div class="right" v-for="(item, index) in tableData" :key="index">
+            <div class="erdeng">
+              <p>窗</p>
+              <ul>
+                <li
+                  :class="child.state ? 'current' : ''"
+                  v-for="(child, index) in item.children"
+                  :key="index"
+                  @click="troggleIcon(child)"
+                >
+                  {{ child.name }}
+                </li>
+              </ul>
+              <p>过道</p>
+              <ul>
+                <!-- @click="troggleIcon(child)" -->
+                <li
+                  :class="child.state ? 'current' : ''"
+                  v-for="(child, index) in item.children2"
+                  :key="index"
+                >
+                  {{ child.name }}
+                </li>
+              </ul>
+              <p>窗</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-card>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogTableVisible = false">返回修改</el-button>
+        <el-button type="primary" @click="checkBuy"> 确认 </el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <h1>{{ comsite }}</h1>
   <Footer />
 </template>
 
 <script setup>
 import Header from "@/components/HeaderView.vue";
 import Footer from "@/components/FooterView.vue";
-import { getPersonInfo, paysend } from "@/api/request";
+import { paysend, getAllPersonInfo } from "@/api/request";
 import router from "@/router";
-import { ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 const orderinfo = JSON.parse(localStorage.getItem("optioncarinfo"));
-console.log(orderinfo);
 const site = ref("");
-const ticket = ref("");
-// 删除
-const delRow = () => {
-  console.log("删除");
-};
 
-const userid = localStorage.getItem("userid");
-const username = localStorage.getItem("username");
-// 获取个人信息
-const PersonInfo = async () => {
-  let res = await getPersonInfo(userid);
-  // console.log(res);
-  if (res.status === 200) {
-    tableData.value = res.data;
+// 确认订单弹框
+const dialogTableVisible = ref(false);
+// 车号
+let randomCarNum = ref("01");
+// 删除
+const passengerName = ref("");
+const delRow = (row, index) => {
+  if (row.username == username || index == 0) {
+    ElMessage({
+      message: "不可删除！",
+      type: "error",
+    });
+  } else {
+    // 获得要删除的信息
+    tableData.value.splice(index, 1);
+    console.log(row.isState);
+    row.isState = 0;
+    console.log(row.isState);
   }
 };
+const userid = localStorage.getItem("userid");
+const username = localStorage.getItem("username");
+const users = ref([]);
+// 获取个人信息
+const PersonInfo = async () => {
+  let res = await getAllPersonInfo(userid);
+  // console.log(res);
+  if (res.status === 200) {
+    // console.log(Array.isArray(res.data));
+    const userArr = res.data.filter((item) => {
+      return item.username == username;
+    });
+    tableData.value = userArr;
+    for (let i = 0; i < tableData.value.length; i++) {
+      tableData.value[i].children = [
+        {
+          name: "A",
+          state: false,
+        },
+        {
+          name: "B",
+          state: false,
+        },
+        {
+          name: "C",
+          state: false,
+        },
+      ];
+      tableData.value[i].site = "一等座";
+      tableData.value[i].children2 = [
+        {
+          name: "D",
+          state: false,
+        },
+        {
+          name: "E",
+          state: false,
+        },
+      ];
+    }
+    users.value = res.data;
+  }
+};
+onMounted(() => {
+  PersonInfo();
+});
 // 车票钱
 const money = ref(0);
 // 获取座
 const getSite = (val) => {
   // console.log(val);
   if (val === "商务座") {
-    money.value = 1998;
+    money.value = orderinfo.vipSite;
   } else if (val === "一等座") {
-    money.value = 1006;
+    money.value = orderinfo.oneSite;
   } else {
-    money.value = 576;
+    money.value = orderinfo.secondSite;
   }
 };
-PersonInfo();
+// 计算车票总价
+const totalMoney = computed(() => {
+  // console.log(tableData.value.length);
+  money.value = tableData.value.length * money.value;
+  return money.value;
+});
+const comsite = computed(() => {
+  return site.value;
+});
 // 表格数据
 const tableData = ref([]);
 // 提交订单
-const purchase = async () => {
+const purchase = () => {
+  dialogTableVisible.value = true;
+  // tableData.value.site = comsite.value;
+  for (let i = 0; i <= tableData.value.length; i++) {
+    tableData.value[i].site = comsite.value;
+    console.log(tableData.value[i]);
+    localStorage.setItem("personOrderInfo", JSON.stringify(tableData.value));
+  }
+};
+// 确认支付
+const checkBuy = async () => {
+  dialogTableVisible.value = false;
   localStorage.setItem("troggle", "ticket");
+  getRandomCarNum();
   // 生成10位数的订单号
   let numArr = [];
   for (let i = 0; i < 10; i++) {
@@ -205,13 +384,126 @@ const purchase = async () => {
   }
   const orderTicketNum = numArr.join("");
   console.log(orderTicketNum);
-  let res = await paysend(orderTicketNum, money.value);
+  let res = await paysend(orderTicketNum, totalMoney.value);
   console.log(res);
   window.location.href = res.result;
+};
+// 添加乘客信息
+const addPassanger = (item, e) => {
+  // console.log(name);
+  if (e.target.checked) {
+    item.isState = e.target.checked;
+    const Trueusers = Array.from(users.value);
+    const optionPassenger = Trueusers.filter((item) => {
+      return item.tel == e.target.id;
+    });
+    tableData.value.push(optionPassenger[0]);
+    const newArr = new Set(tableData.value);
+    const newArr2 = [...newArr];
+    tableData.value = newArr2;
+    for (let i = 0; i < tableData.value.length; i++) {
+      tableData.value[i].children = [
+        {
+          name: "A",
+          state: false,
+        },
+        {
+          name: "B",
+          state: false,
+        },
+        {
+          name: "C",
+          state: false,
+        },
+      ];
+      tableData.value[i].children2 = [
+        {
+          name: "D",
+          state: false,
+        },
+        {
+          name: "E",
+          state: false,
+        },
+      ];
+      console.log(tableData.value[i]);
+    }
+    // console.log(tableData.value);
+  } else {
+    for (let i = 0; i < tableData.value.length; i++) {
+      if (tableData.value[i].username == item.username) {
+        tableData.value.splice(i, 1);
+      }
+    }
+  }
+};
+// 选的座位
+const iconTrue = ref("");
+// 切换图标
+const troggleIcon = (item) => {
+  // console.log(site.value);
+  for (let i = 0; i < tableData.value.length; i++) {
+    tableData.value[i].children.forEach((el, index) => {
+      el.state = false;
+    });
+  }
+  item.state = true;
+  iconTrue.value = item.name;
+  localStorage.setItem("siteType", JSON.stringify(iconTrue.value));
+  // console.log(iconTrue.value);
+};
+// 计算选座的个数
+const numSite = computed(() => {
+  const newNum = tableData.value[0].children.filter((item) => {
+    return item.state == true;
+  });
+  return newNum.length;
+});
+
+const getRandomCarNum = () => {
+  // 随机车数和座位数
+  randomCarNum.value = parseInt(Math.random(0, 15) * 10);
+  // console.log(carNumber);
+  if (randomCarNum.value < 10) {
+    randomCarNum.value = "0" + randomCarNum.value;
+  } else {
+    randomCarNum.value = randomCarNum.value;
+  }
+  // console.log(123);
+  localStorage.setItem("randomCarNum", JSON.stringify(randomCarNum.value));
 };
 </script>
 
 <style lang='less' scoped>
+:deep(.el-table) {
+  font-size: 12px;
+  margin-top: 10px;
+}
+.current {
+  background: url(@/assets/img/site.png) no-repeat -40px 0 !important;
+  color: #fff !important;
+}
+
+.trainInfo {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  // justify-content: space-around;
+  border-bottom: 1px dashed #ccc;
+  .time {
+    font-weight: bold;
+  }
+  .moveLeft {
+    margin-left: 20px;
+  }
+  .startStation {
+    font-weight: bold;
+    margin-left: 20px;
+  }
+  .symbol {
+    margin: 0 10px;
+  }
+}
 .ticket-container {
   width: 1190px;
   margin: 20px auto;
@@ -239,26 +531,7 @@ const purchase = async () => {
           color: rgb(62, 136, 202);
           font-weight: bold;
         }
-        .trainInfo {
-          margin-top: 20px;
-          padding-bottom: 10px;
-          display: flex;
-          // justify-content: space-around;
-          border-bottom: 1px dashed #ccc;
-          .time {
-            font-weight: bold;
-          }
-          .moveLeft {
-            margin-left: 20px;
-          }
-          .startStation {
-            font-weight: bold;
-            margin-left: 20px;
-          }
-          .symbol {
-            margin: 0 10px;
-          }
-        }
+
         .ticektType {
           display: flex;
           font-size: 12px;
@@ -301,15 +574,18 @@ const purchase = async () => {
             margin-right: 10px;
           }
         }
-        .every {
+        .passenger {
           display: flex;
-          align-items: center;
-          margin-left: 30px;
-          margin-top: 10px;
-          border-bottom: 1px dashed;
-          margin-bottom: 10px;
-          padding-bottom: 15px;
-          font-size: 13px;
+          .every {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+            margin-top: 10px;
+            border-bottom: 1px dashed;
+            margin-bottom: 10px;
+            padding-bottom: 15px;
+            font-size: 13px;
+          }
         }
       }
       .el-table {
@@ -341,6 +617,66 @@ const purchase = async () => {
       .personinfo {
         color: #07f;
         cursor: pointer;
+      }
+    }
+  }
+}
+.checkorder {
+  .tip {
+    margin-top: 10px;
+    color: #3177bf;
+    font-size: 12px;
+  }
+  .checkSite {
+    background-color: snow;
+    border-bottom: 1px dashed #999;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    .left {
+      width: 90px;
+      line-height: 18px;
+      height: 36px;
+      padding-top: 0;
+      font-size: 13px;
+      margin-top: 10px;
+      .left-xz {
+        background: url(@/assets/img/laba2.png) no-repeat;
+        padding-left: 25px;
+      }
+    }
+    .allRight {
+      display: flex;
+      flex-direction: column;
+      .right {
+        margin-top: 10px;
+        padding-bottom: 10px;
+        font-size: 13px;
+        .erdeng {
+          display: flex;
+          margin-left: 80px;
+          align-items: center;
+          p {
+            width: 28px;
+            height: 28px;
+            text-align: center;
+            line-height: 28px;
+            padding: 0 20px;
+            border-right: 2px solid #ccc;
+          }
+          ul {
+            display: flex;
+            li {
+              width: 30px;
+              height: 28px;
+              text-align: center;
+              line-height: 26px;
+              margin-left: 10px;
+              background: url(@/assets/img/site.png) no-repeat -80px 0;
+              color: #666;
+            }
+          }
+        }
       }
     }
   }

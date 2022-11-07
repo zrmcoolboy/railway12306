@@ -14,6 +14,7 @@
   <!-- 一键上移 -->
   <el-backtop :right="20" :bottom="20"></el-backtop>
   <Footer />
+  <!-- 右侧固定栏 -->
   <div class="fix-right" v-show="isShow">
     <ul class="menu-right">
       <li>

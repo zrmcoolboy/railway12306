@@ -189,22 +189,22 @@ const routes = [
   },
   {
     path: "/zhifu",
-    name: "zhifu",
+    name: "支付",
     component: () => import("@/views/zhifu.vue"),
   },
   {
     path: "/order",
-    name: "order",
+    name: "购物车订单",
     component: () => import("@/views/Shopcart/Order.vue"),
   },
   {
     path: "/buyticket",
-    name: "buyticket",
+    name: "车票订单",
     component: () => import("@/views/BuyTicket/BuyTicket.vue"),
   },
   {
     path: "/vipinfo",
-    name: "vipinfo",
+    name: "会员信息",
     component: () => import("@/views/VipView/memberserve/MemberServe.vue"),
   },
   {

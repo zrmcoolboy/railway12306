@@ -5,6 +5,9 @@ import "nprogress/nprogress.css";
 const request = axios.create({
   baseURL: "http://127.0.0.1:5005/api", //10.2.165.143
   timeout: 3000,
+  headers: {
+    "Content-type": "application/json",
+  },
 });
 
 request.interceptors.request.use((config) => {

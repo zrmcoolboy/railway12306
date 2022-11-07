@@ -29,6 +29,8 @@ export const useMainStore = defineStore("main", {
       AllPersonInfo: [],
       //乘客信息
       passengerinfo: {},
+      // 支付后的状态
+      payState: "",
     };
   },
   //  相当于计算属性，有缓存

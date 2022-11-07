@@ -88,6 +88,33 @@
       </p>
     </div>
   </div>
+  <el-dialog
+    v-model="dialogVisible"
+    title="手机验证"
+    width="30%"
+    :show-close="false"
+  >
+    <div class="validPhone">
+      <el-input v-model="valid.tel" placeholder="请输入手机号"></el-input>
+      <el-input
+        v-model="valid.code"
+        placeholder="输入验证码"
+        style="width: 95px"
+      ></el-input>
+    </div>
+    <el-button
+      :disabled="btnState"
+      @click="getCode"
+      style="margin-left: 210px; margin-top: -88px"
+      >{{ btnText }}</el-button
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="goLogin"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
   <Footer />
 </template>
 
@@ -95,39 +122,108 @@
 import Footer from "@/components/FooterView.vue";
 import router from "@/router/index";
 import { useMainStore } from "@/store/index";
-import { reactive } from "vue";
-import { intoLogin } from "@/api/request";
+import { reactive, ref, watch } from "vue";
+import { intoLogin, getPhoneCode } from "@/api/request";
+import { ElMessage } from "element-plus";
+// 点击登陆后弹出的框
+const dialogVisible = ref(false);
+const valid = reactive({
+  tel: "",
+  code: "",
+  validCode: "",
+});
+// 获取验证码按钮文字
+const btnText = ref("获取短信验证码");
+const btnState = ref(false);
+// 倒计时
+let codeNum = ref(61);
 const info = reactive({
   username: "",
   password: "",
 });
 const store = useMainStore();
+// 保存的个人信息
+const person = reactive({
+  token: "",
+  userid: "",
+  username: "",
+  personInfo: [],
+});
 // 登录按钮
 const onLogin = async () => {
-  const res = await intoLogin({
-    username: info.username,
-    password: info.password,
-  });
-  console.log(res.data);
-  if (res.status === 200) {
-    ElMessage({
-      message: "登录成功！",
-      type: "success",
+  if (!info.username || !info.password) {
+    ElNotification.error({
+      message: "请输入完整信息！",
+      offset: 200,
+      duration: 700,
+      showClose: false,
     });
-    const token = res.token;
-    const userid = res.data[0].id;
-    const username = res.data[0].username;
-    // console.log(userid);
-    localStorage.setItem("token", token);
-    localStorage.setItem("userid", userid);
-    localStorage.setItem("username", username);
+  } else {
+    const res = await intoLogin({
+      username: info.username,
+      password: info.password,
+    });
+    if (res.status === 200) {
+      dialogVisible.value = true;
+      person.token = res.token;
+      person.userid = res.data[0].id;
+      person.username = res.data[0].username;
+      person.personInfo = res.data;
+      // console.log(userid);
+    } else {
+      ElMessage({
+        message: res.message,
+        type: "error",
+      });
+    }
+  }
+};
+// 点击获取验证码
+const getCode = async () => {
+  if (valid.tel == "") {
+    ElMessage({
+      message: "请输入手机号",
+      type: "warning",
+    });
+  } else {
+    // console.log(valid.tel);
+    const reg = /^1[23456789]\d{9}$/;
+    const state = reg.test(valid.tel);
+    console.log(state);
+    if (state == true) {
+      let res = await getPhoneCode({ phone: valid.tel });
+      console.log(res.data.data);
+      valid.validCode = res.data.data;
+    }
+    let timer = setInterval(() => {
+      codeNum.value--;
+      btnText.value = `重新发送${codeNum.value}`;
+      if (codeNum.value == 0) {
+        console.log(codeNum.value);
+        clearInterval(timer);
+        codeNum.value = 61;
+        btnText.value = "重新发送";
+        btnState.value = false;
+      }
+    }, 1000);
+    btnState.value = true;
+  }
+};
+// 验证码通过
+const goLogin = async () => {
+  // console.log(valid.code);
+  // console.log(valid.validCode);
+  if (valid.code == valid.validCode) {
+    localStorage.setItem("token", person.token);
+    localStorage.setItem("userid", person.userid);
+    localStorage.setItem("username", person.username);
     store.$patch({
-      personInfo: res.data,
+      personInfo: person.personInfo,
     });
     router.push("/serverinfo");
   } else {
     ElMessage({
-      message: res.message,
+      message: "验证码错误",
       type: "error",
     });
   }
@@ -135,6 +231,23 @@ const onLogin = async () => {
 </script>
 
 <style lang="less" scoped>
+.validPhone {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100px;
+  background: url(@/assets/img/girl2.png);
+  background-position: -130px 0px;
+  .el-input {
+    margin-top: 10px;
+    margin-left: 110px;
+    width: 200px;
+    height: 32px;
+  }
+}
+.el-button {
+  width: 100px;
+}
 .header {
   width: 1190px;
   margin: 20px auto;

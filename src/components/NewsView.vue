@@ -105,7 +105,7 @@
 .two > li {
   width: 1100px;
   height: 40px;
-  background-color: snow;
+
   line-height: 40px;
 }
 .two > li > a {

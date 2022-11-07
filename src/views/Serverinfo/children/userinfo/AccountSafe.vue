@@ -14,7 +14,7 @@
         <p>手机核验</p>
       </div>
       <div class="center">使用手机接收铁路客户服务信息</div>
-      <el-button>修改</el-button>
+      <el-button @click="modifyphone">修改</el-button>
     </div>
     <div class="container">
       <div class="left">
@@ -36,9 +36,15 @@
 </template>
 
 <script setup>
+import { getPhoneCode } from "@/api/request";
 import router from "@/router";
 const editPwd = () => {
   router.push("/serverinfo/editpwd");
+};
+// const phone = "15169341071";
+const modifyphone = () => {
+  // let res = await getPhoneCode(phone);
+  console.log("修改");
 };
 </script>
 

@@ -60,9 +60,12 @@
             </div>
             <div>
               <span class="realpay--title2"> 送达至:</span>
-              <span class="addr-info">06车5F</span>
+              <span class="addr-info">
+                {{ optioncarinfo.carID }}次 {{ randomCarNum }}车{{ randomCarNum
+                }}{{ siteType }}</span
+              >
             </div>
-            <div>
+            <div class="last-name">
               <span class="realpay--title3"> 收货人:</span>
               <span class="addr-info">张瑞敏</span>
             </div>
@@ -88,7 +91,10 @@ const orderFoods = JSON.parse(localStorage.getItem("orderFoods"));
 let total = JSON.parse(localStorage.getItem("orderPrice"));
 let orderNum = JSON.parse(localStorage.getItem("OrderNum"));
 orderNum = orderNum.join("");
-console.log(orderNum);
+
+const randomCarNum = JSON.parse(localStorage.getItem("randomCarNum"));
+const siteType = JSON.parse(localStorage.getItem("siteType"));
+const optioncarinfo = JSON.parse(localStorage.getItem("optioncarinfo"));
 // 支付
 const gopay = async () => {
   localStorage.setItem("troggle", "cart");
@@ -261,19 +267,19 @@ const gopay = async () => {
       margin-top: 15px;
       padding: 10px;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      // flex-direction: column;
+      // justify-content: space-between;
       .realpay--title {
         font-weight: bold;
-        margin-right: 37px;
+        margin-right: 10px;
       }
       .realpay--title2 {
         font-weight: bold;
-        margin-right: 37px;
+        margin-right: 10px;
       }
       .realpay--title3 {
         font-weight: bold;
-        margin-right: 37px;
+        margin-right: 10px;
         margin-top: 5px;
       }
       .realpay--price-symbol {
@@ -281,6 +287,9 @@ const gopay = async () => {
         display: inline-block;
         width: 60px;
         text-align: left;
+      }
+      .last-name {
+        margin-left: 15px;
       }
     }
   }
@@ -298,7 +307,7 @@ const gopay = async () => {
   .addr-info {
     font-weight: normal;
     color: red;
-    display: inline-block;
+    // display: inline-block;
     width: 60px;
     text-align: left;
   }

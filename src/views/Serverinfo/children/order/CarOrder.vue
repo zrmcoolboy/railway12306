@@ -1,14 +1,48 @@
 <template>
   <div class="carOrder-container">
     <el-tabs type="card">
-      <el-tab-pane label="未完成订单">
-        <NoneTicket />
-        <div class="tip-container">
-          <h4>温馨提示：</h4>
-          <p>1.席位已锁定，请在指定时间内完成网上支付。</p>
-          <p>2.逾期未支付，系统将取消本次交易。</p>
-          <p>3.在完成支付或取消本订单之前，您将无法购买其他车票。</p>
-          <p>4.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+      <el-tab-pane label="全部订单">
+        <div class="finished">
+          <table class="info" rowspan="2" align="center">
+            <th>车次信息</th>
+            <th>旅客信息</th>
+            <th>席位信息</th>
+            <th>票价</th>
+            <th>车票状态</th>
+            <tr v-for="item in AllOrder" :key="item.carid">
+              <td>
+                <span class="dataZoom"
+                  >{{ item.start }}-{{ item.end }} {{ item.carid }}</span
+                >
+                <br />
+                {{ item.trade_time.slice(0, 10) }} <br />
+                {{ item.startTime }} 开
+              </td>
+              <td>
+                {{ item.username }} <br />
+                {{ item.idcardnum }}
+              </td>
+              <td>
+                {{ item.site }} <br />
+                {{ item.carNumber }}车{{ item.carNumber }}{{ item.sitetype }}
+              </td>
+              <td>
+                {{ item.travel }}票 <br />
+                <span class="ticketPrice">{{ item.totalMoney }}元</span>
+              </td>
+              <td>已支付</td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <NoneTicket v-if="AllOrder ? false : true" />
+          <div class="tip-container">
+            <h4>温馨提示：</h4>
+            <p>1.席位已锁定，请在指定时间内完成网上支付。</p>
+            <p>2.逾期未支付，系统将取消本次交易。</p>
+            <p>3.在完成支付或取消本订单之前，您将无法购买其他车票。</p>
+            <p>4.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="未出行订单">
@@ -40,7 +74,40 @@
           </div>
           <el-tabs type="border-card" class="demo-tabs">
             <el-tab-pane label="全部">
-              <NoneTicket />
+              <NoneTicket v-show="NoUse ? false : true" />
+              <div class="finished">
+                <table class="info" rowspan="2" align="center">
+                  <th>车次信息</th>
+                  <th>旅客信息</th>
+                  <th>席位信息</th>
+                  <th>票价</th>
+                  <th>车票状态</th>
+                  <tr v-for="item in NoUse" :key="item.carid">
+                    <td>
+                      <span class="dataZoom"
+                        >{{ item.start }}-{{ item.end }} {{ item.carid }}</span
+                      >
+                      <br />
+                      {{ item.trade_time.slice(0, 10) }} <br />
+                      {{ item.startTime }} 开
+                    </td>
+                    <td>
+                      {{ item.username }} <br />
+                      {{ item.idcardnum }}
+                    </td>
+                    <td>
+                      {{ item.site }} <br />
+                      {{ item.carNumber }}车{{ item.carNumber
+                      }}{{ item.sitetype }}
+                    </td>
+                    <td>
+                      {{ item.travel }}票 <br />
+                      <span class="ticketPrice">{{ item.totalMoney }}元</span>
+                    </td>
+                    <td>待使用</td>
+                  </tr>
+                </table>
+              </div>
               <TipInfo />
             </el-tab-pane>
             <el-tab-pane label="可改签">
@@ -56,6 +123,16 @@
               <TipInfo />
             </el-tab-pane>
           </el-tabs>
+        </div>
+        <div>
+          <NoneTicket />
+          <div class="tip-container">
+            <h4>温馨提示：</h4>
+            <p>1.席位已锁定，请在指定时间内完成网上支付。</p>
+            <p>2.逾期未支付，系统将取消本次交易。</p>
+            <p>3.在完成支付或取消本订单之前，您将无法购买其他车票。</p>
+            <p>4.未尽事宜详见《铁路旅客运输规程》等有关规定和车站公告。</p>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="历时订单">
@@ -81,7 +158,39 @@
             <el-button>查询</el-button>
           </div>
         </div>
-        <NoneTicket />
+        <div class="finished" v-show="outdate ? false : true">
+          <table class="info" rowspan="2" align="center">
+            <th>车次信息</th>
+            <th>旅客信息</th>
+            <th>席位信息</th>
+            <th>票价</th>
+            <th>车票状态</th>
+            <tr v-for="item in outdate" :key="item.carid">
+              <td>
+                <span class="dataZoom"
+                  >{{ item.start }}-{{ item.end }} {{ item.carid }}</span
+                >
+                <br />
+                {{ item.trade_time.slice(0, 10) }} <br />
+                {{ item.startTime }} 开
+              </td>
+              <td>
+                {{ item.username }} <br />
+                {{ item.idcardnum }}
+              </td>
+              <td>
+                {{ item.site }} <br />
+                {{ item.carNumber }}车{{ item.carNumber }}{{ item.sitetype }}
+              </td>
+              <td>
+                {{ item.travel }}票 <br />
+                <span class="ticketPrice">{{ item.totalMoney }}元</span>
+              </td>
+              <td>已完成</td>
+            </tr>
+          </table>
+        </div>
+        <NoneTicket v-show="outdate ? true : false" />
         <TipInfo />
       </el-tab-pane>
     </el-tabs>
@@ -91,11 +200,20 @@
 <script setup>
 import TipInfo from "@/components/TipView.vue";
 import NoneTicket from "@/components/NoneTicket.vue";
-const { ref } = require("@vue/reactivity");
+import { getOrder } from "@/api/request";
+import { ref, onMounted } from "vue";
 
 const findmsg = ref("");
 const datetime = ref("");
 const carNum = ref("");
+//全部订单
+const AllOrder = ref(null);
+//未使用
+const NoUse = ref(null);
+// 过时的
+const outdate = ref(null);
+const siteType = JSON.parse(localStorage.getItem("siteType"));
+const personOrderInfo = JSON.parse(localStorage.getItem("personOrderInfo"));
 //获取日期
 let now = new Date();
 let year = now.getFullYear();
@@ -108,12 +226,60 @@ if (date < 10) {
   date = "0" + date;
 }
 let time = year + "-" + month + "-" + date;
-
-// 内置tab
-const tabitem = (context, e) => {};
+// 获取购买的车票信息
+const userid = JSON.parse(localStorage.getItem("userid"));
+const getData = async () => {
+  let res = await getOrder({ userid: userid });
+  console.log(res);
+  AllOrder.value = res.data;
+  NoUse.value = AllOrder.value.filter((item) => {
+    return item.state == 0;
+  });
+  outdate.value = AllOrder.value.filter((item) => item.state == 1);
+  console.log(NoUse.value);
+};
+onMounted(() => {
+  getData();
+});
 </script>
 
 <style lang='less' scoped>
+.finished {
+  width: 980px;
+  height: 400px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+}
+.info {
+  width: 100%;
+  // height: 100%;
+  margin: 20px auto;
+  text-align: center;
+  line-height: 25px;
+  border-collapse: collapse;
+  th {
+    // font-weight: 400;
+    color: #666;
+    border: 1px solid #ccc;
+    background-color: #eee;
+  }
+  tr {
+    height: 100px;
+    color: #666;
+    // border-radius: 10px;
+    td {
+      border: 1px solid #ccc;
+      font-size: 14px;
+      .ticketPrice {
+        color: #e6a23c;
+      }
+      .dataZoom {
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+  }
+}
 .tip-container {
   width: 968px;
   margin: 10px auto;

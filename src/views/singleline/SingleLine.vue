@@ -99,14 +99,19 @@
   <div class="body-second">
     <div class="body-second-top">
       <el-tabs type="border-card">
-        <el-tab-pane label="10-4">
+        <el-tab-pane
+          :label="item"
+          v-for="(item, index) in timeArr"
+          :key="index"
+        >
           <div class="body-second-botton">
             <div class="botton-top">
               <div class="botton-top-left">车次类型：</div>
               <div class="botton-top-center">
                 <!--                   :class="troggleAll ? 'active' : ''" -->
                 <span class="top-center-all" @click="findAllTrain">全部</span>
-                <ul ref="lis">
+                <ul>
+                  <!-- ref="lis" -->
                   <li>
                     <input type="checkbox" id="G" @click="findGTrain" />
                     <label for="G" class="cursor">GC-高铁/城际</label>
@@ -180,7 +185,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="10-5"
+        <!-- <el-tab-pane label="10-5"
           ><div class="body-second-botton">
             <div class="botton-top">
               <div class="botton-top-left">车次类型：</div>
@@ -907,7 +912,7 @@
               </div>
             </div>
           </div></el-tab-pane
-        >
+        > -->
       </el-tabs>
     </div>
   </div>
@@ -986,30 +991,225 @@
         <th>其他</th>
         <th colspan="1" rowspan="1">备注</th>
       </tr>
-      <tr class="dataList" v-for="item in ticketData" :key="item.carID">
+      <tr
+        @click="addNewRow"
+        class="dataList"
+        v-for="item in ticketData"
+        :key="item.carID"
+      >
         <th>{{ item.carID }}</th>
         <th>
-          {{ item.start }}
-          <br clear="none" />
-          {{ item.end }}
+          <p class="startplace">{{ item.start }}</p>
+          <p class="endplace">{{ item.end }}</p>
         </th>
         <th>
           {{ item.startTime }}
           <br clear="none" />
-          {{ item.endTime }}
+          <p class="gray">{{ item.endTime }}</p>
         </th>
         <th>
           {{ item.totalTime }}
         </th>
-        <th>{{ item.tedeng ? item.tedeng : "--" }}</th>
-        <th>{{ item.one ? item.one : "--" }}</th>
-        <th>{{ item.two ? item.two : "--" }}</th>
-        <th>{{ item.gjsoftwo ? item.gjsoftwo : "--" }}</th>
-        <th>{{ item.softwo ? item.softwo : "--" }}</th>
-        <th>{{ item.soft ? item.soft : "--" }}</th>
-        <th>{{ item.ying ? item.ying : "--" }}</th>
-        <th>{{ item.nochart ? item.nochart : "--" }}</th>
-        <th>{{ item.other ? item.other : "--" }}</th>
+        <th
+          :class="
+            item.tedeng == '候补'
+              ? 'orange'
+              : item.tedeng == '--'
+              ? 'gray'
+              : item.tedeng == '有'
+              ? 'green'
+              : ''
+          "
+        >
+          {{ item.tedeng ? item.tedeng : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.vipSite"
+          >
+            <template #reference>
+              <el-icon v-show="item.vipSite ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.one == '候补'
+              ? 'orange'
+              : item.one == '有'
+              ? 'green'
+              : item.one == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.one ? item.one : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.oneSite"
+          >
+            <template #reference>
+              <el-icon v-show="item.oneSite ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.two == '候补'
+              ? 'orange'
+              : item.two == '有'
+              ? 'green'
+              : item.two == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.two ? item.two : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.secondSite"
+          >
+            <template #reference>
+              <el-icon v-show="item.secondSite ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.gjsoftwo == '候补'
+              ? 'orange'
+              : item.gjsoftwo == '有'
+              ? 'green'
+              : item.gjsoftwo == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.gjsoftwo ? item.gjsoftwo : "--" }}
+        </th>
+        <th
+          :class="
+            item.softwo == '候补'
+              ? 'orange'
+              : item.softwo == '有'
+              ? 'green'
+              : item.softwo == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.softwo ? item.softwo : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.oneSoftP"
+          >
+            <template #reference>
+              <el-icon v-show="item.oneSoftP ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.soft == '候补'
+              ? 'orange'
+              : item.soft == '有'
+              ? 'green'
+              : item.soft == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.soft ? item.soft : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.softP"
+          >
+            <template #reference>
+              <el-icon v-show="item.softP ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.ying == '候补'
+              ? 'orange'
+              : item.ying == '有'
+              ? 'green'
+              : item.ying == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.ying ? item.ying : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.yingSiteP"
+          >
+            <template #reference>
+              <el-icon v-show="item.yingSiteP ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th
+          :class="
+            item.nochart == '候补'
+              ? 'orange'
+              : item.nochart == '有'
+              ? 'green'
+              : item.nochart == '无'
+              ? 'gray'
+              : item.nochart == '--'
+              ? 'gray'
+              : ''
+          "
+        >
+          {{ item.nochart ? item.nochart : "--" }}
+          <el-popover
+            placement="bottom"
+            title="价格"
+            :width="150"
+            trigger="click"
+            :content="'￥' + item.noSiteP"
+          >
+            <template #reference>
+              <el-icon v-show="item.noSiteP ? true : false"
+                ><ArrowDownBold
+              /></el-icon>
+            </template>
+          </el-popover>
+        </th>
+        <th :class="item.other == '--' ? 'gray' : ''">
+          {{ item.other ? item.other : "--" }}
+        </th>
         <th>
           <el-button type="primary" @click="prepurchase(item)">预定</el-button>
         </th>
@@ -1046,9 +1246,9 @@ import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
 import router from "@/router";
 const store = useMainStore();
-const { ticketData } = storeToRefs(store);
-console.log(ticketData.value);
+const { ticketData, start, end } = storeToRefs(store);
 let temp = ref("");
+const ticketDataInfo = ref([]);
 // 地点交换
 const exchange = () => {
   if (info.start === "" && info.end === "") {
@@ -1065,8 +1265,6 @@ const prepurchase = (item) => {
   if (username === "") {
     alert("请登录");
   } else {
-    // alert("预定成功！");
-    // console.log(item.carID);
     localStorage.setItem("optioncarinfo", JSON.stringify(item));
     router.push("/buyticket");
   }
@@ -1088,9 +1286,11 @@ const findinfo = () => {
     });
   } else {
     isShowCarInfo.value = true;
+    store.$patch({
+      start: info.start,
+      end: info.end,
+    });
     findAllTrain();
-    // info.start = "";
-    // info.end = "";
   }
 };
 
@@ -1109,10 +1309,39 @@ const findGTrain = async (e) => {
         ticketData: res.data,
       });
     }
-    const arr = liss.value.map((item) => (item.checked = false));
+    // const arr = liss.value.map((item) => (item.checked = false));
     e.target.checked = true;
   }
 };
+
+// 日期
+const date = new Date();
+// console.log(date);
+let month = date.getMonth() + 1;
+let day = date.getDate();
+let dateTime = month + "-" + day;
+console.log(dateTime);
+let timeArr = ref([]);
+// 日期函数
+const TimeArr = () => {
+  for (let i = 0; i < 14; i++) {
+    if (day > 30) {
+      day = "0" + 1;
+      month++;
+      month = month < 10 ? "0" + month : month;
+    } else {
+      ++day;
+      day = day < 10 ? "0" + day : day;
+    }
+    if (month > 12) {
+      month = 1;
+    }
+    let timer = month + "-" + day;
+    timeArr.value.push(timer);
+  }
+};
+TimeArr();
+// console.log(timeArr.value);
 
 // 点击出发点或到达点的点击事件
 const ByStartOrEnd = (name, e) => {
@@ -1137,20 +1366,17 @@ const ByStartOrEnd = (name, e) => {
     }
   }
 };
-// 历时降序
-// const get1 = () => {
-//   console.log("降序");
-// };
 
 // 获取ulDom
-const lis = ref(null);
+// const lis = ref(null);
+// console.log(lis.value);
 // 存储lisDOM  input
-const liss = ref([]);
+// const liss = ref([]);
 
 // 车型全部按钮
 const findAllTrain = () => {
   getTicketInfo();
-  liss.value.map((item) => (item.checked = true));
+  // liss.value.map((item) => (item.checked = true));
 };
 // 出发站的全部按钮
 const getAllStart = () => {
@@ -1169,6 +1395,8 @@ const getTicketInfo = async () => {
   const res = await findTicket(info);
   console.log(res);
   if (res.status === 200) {
+    ticketDataInfo.value = res.data;
+    console.log(ticketDataInfo.value);
     store.$patch({
       ticketData: res.data,
     });
@@ -1186,6 +1414,9 @@ const getTicketInfo = async () => {
 
 // 首页搜索进入
 onMounted(() => {
+  // console.log(start.value, end.value);
+  info.start = start.value;
+  info.end = end.value;
   if (info.start === "" && info.end === "") {
     store.$patch({
       ticketData: "",
@@ -1193,16 +1424,15 @@ onMounted(() => {
   } else {
     getTicketInfo();
   }
-
   isShowCarInfo.value = true;
   // 打印ul
-  // console.log(lis.value.querySelectorAll("li"));
+  // console.log(lis.value);
   // 获取所有的li
-  const arr = lis.value.querySelectorAll("li input");
-  arr.forEach((el) => {
-    // console.log(el);
-    liss.value.push(el);
-  });
+  // const arr = lis.value.querySelectorAll("li input");
+  // arr.forEach((el) => {
+  //   // console.log(el);
+  //   liss.value.push(el);
+  // });
   ElMessageBox.alert(
     "<strong>根据国务院联防联控机制，2022年9月10日至10月31日，旅客进站乘车需持48小时核酸阴性证明，请广大旅客提前做好相关准备，确保出行顺畅。进（返）京旅客还需持“北京健康宝”绿码</strong>",
     "温馨提示",
@@ -1246,9 +1476,36 @@ const changeArrowTime = async (e) => {
   });
   // console.log(e.target.dataset.name);
 };
+
+// 点击每一行添加一行信息
+const addNewRow = (e) => {
+  console.log(e);
+};
 </script>
 
 <style lang="less" scoped>
+// 有车票绿色
+.green {
+  color: #26a306 !important;
+  font-weight: 400 !important;
+} //候补橙色
+.orange {
+  color: #f80 !important;
+  font-weight: 400 !important;
+}
+//无为灰色
+.gray {
+  color: #999 !important;
+  font-weight: 400 !important;
+}
+
+// 出发标志
+.startplace {
+  background: url(@/assets/img/icon.png) no-repeat 0 -548px;
+}
+.endplace {
+  background: url(@/assets/img/icon.png) no-repeat 0 -499px;
+}
 // 出发日期
 .block {
   width: 200px;

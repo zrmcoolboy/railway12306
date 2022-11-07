@@ -62,6 +62,10 @@ export const editPersonInfo = (info) => {
 export const editPassword = (data) => {
   return request.post("/user/editpwd", data);
 };
+// 发送验证码
+export const getPhoneCode = (data) => {
+  return request.post("/code", data);
+};
 
 // 车票查询
 export const findTicket = (info) => {
@@ -169,5 +173,21 @@ export const paysend2 = (out_trade_no, trade_no) => {
     url: "/queryOrder",
     method: "post",
     data: { out_trade_no: out_trade_no, trade_no: trade_no },
+  });
+};
+// 存储订单
+export const saveOrder = (data) => {
+  return request({
+    url: "/trainorder",
+    method: "post",
+    data: data,
+  });
+};
+
+//获得订单
+export const getOrder = (params) => {
+  return request({
+    url: "/gettrainorder",
+    params: params,
   });
 };
